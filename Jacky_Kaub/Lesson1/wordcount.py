@@ -40,13 +40,15 @@ print_words() and print_top().
 import sys
 import re
 
-def word_count(word_list):
+def word_count(filename):
     #Creation of a dictionnary of words with number of occurence base on 
     #a list of words
     word_dict={}
+    with open(filename, encoding='utf-8') as entree:
+        word_list=re.sub(r'--',' ',entree.read()).split()
     for word in word_list:
                 word=word.lower()
-                word=re.sub(r'\W+','',word)
+                word=re.sub(r'^\W+|\W+$','',word)
                 if word in word_dict.keys():
                     word_dict[word]+=1
                 else:
@@ -54,31 +56,19 @@ def word_count(word_list):
     return word_dict
 
 def print_words(filename):
-    with open(filename, encoding='utf-8') as entree:
-        word_list=entree.read().split()
-        word_dict = word_count(word_list)
+    word_dict = word_count(filename)
     for word,count in word_dict.items():
         print(str(word)+" "+str(count))
         
 def print_top(filename):
     tup_list=[]
-    with open(filename, encoding='utf-8') as entree:
-        word_list=entree.read().split()
-        word_dict = word_count(word_list)
+    word_dict = word_count(filename)
     for word,count in word_dict.items():
         tup_list.append((word,count))
     tup_list = sorted(tup_list,key=lambda x:x[1],reverse=True)[:20]
     for tup in tup_list:
         print(str(tup[0])+" "+str(tup[1]))
     
-    
-# +++your code here+++
-# Define print_words(filename) and print_top(filename) functions.
-# You could write a helper utility function that reads a file
-# and builds and returns a word/count dict for it.
-# Then print_words() and print_top() can just call the utility function.
-
-###
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
