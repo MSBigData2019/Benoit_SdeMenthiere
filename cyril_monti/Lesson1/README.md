@@ -1,3 +1,0 @@
-# Kit Data Science
-
-
