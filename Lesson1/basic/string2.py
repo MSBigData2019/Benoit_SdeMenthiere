@@ -17,7 +17,12 @@
 # Return the resulting string.
 def verbing(s):
   # +++your code here+++
-  return
+    if len(s)>2:
+        if s.endswith("ing"):
+            s+="ly"
+        else:
+            s+="ing"
+    return s
 
 
 # E. not_bad
@@ -30,7 +35,11 @@ def verbing(s):
 # This dinner is good!
 def not_bad(s):
   # +++your code here+++
-  return
+    b = s.find("bad")
+    n = s.find("not")
+    if n < b:
+        s = s[:n] + "good" + s[b+3:]
+    return s
 
 
 # F. front_back
@@ -42,8 +51,15 @@ def not_bad(s):
 #  a-front + b-front + a-back + b-back
 def front_back(a, b):
   # +++your code here+++
-  return
-
+    def divise(s):
+        l = len(s)
+        if l%2 == 0:
+            return s[:l//2], s[l//2:]
+        else:
+            return s[:l//2+1], s[l//2+1:]
+    af, ab = divise(a)
+    bf, bb = divise(b)
+    return af + bf + ab + bb
 
 # Simple provided test() function used in main() to print
 # what each function returns vs. what it's supposed to return.
@@ -52,26 +68,24 @@ def test(got, expected):
     prefix = ' OK '
   else:
     prefix = '  X '
-  print '%s got: %s expected: %s' % (prefix, repr(got), repr(expected))
+  print('%s got: %s expected: %s' % (prefix, repr(got), repr(expected)))
 
 
 # main() calls the above functions with interesting inputs,
 # using the above test() to check if the result is correct or not.
 def main():
-  print 'verbing'
+  print('verbing')
   test(verbing('hail'), 'hailing')
   test(verbing('swiming'), 'swimingly')
   test(verbing('do'), 'do')
 
-  print
-  print 'not_bad'
+  print('not_bad')
   test(not_bad('This movie is not so bad'), 'This movie is good')
   test(not_bad('This dinner is not that bad!'), 'This dinner is good!')
   test(not_bad('This tea is not hot'), 'This tea is not hot')
   test(not_bad("It's bad yet not"), "It's bad yet not")
 
-  print
-  print 'front_back'
+  print('front_back')
   test(front_back('abcd', 'xy'), 'abxcdy')
   test(front_back('abcde', 'xyz'), 'abcxydez')
   test(front_back('Kitten', 'Donut'), 'KitDontenut')
