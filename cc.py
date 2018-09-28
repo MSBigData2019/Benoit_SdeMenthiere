@@ -22,7 +22,13 @@ def array_front9(nums):
 # that a substring length 2 appears  in the string and also as
 # the last 2 chars of the string, so "hixxxhi" yields 1 (we won't count the end substring).
 def last2(string):
-    return
+    res = -1
+    sb = string[-2:]
+    sub_len = len(sb)
+    for i in range(len(string)):
+        if string[i:i+sub_len] == sb:
+            res += 1
+    return res
 
 #Write a proramm that returna dictionary of occurences of the alphabet for a given string.
 # Test it with the Lorem upsuj
@@ -39,7 +45,8 @@ def length_words(array):
     map = {}
     for word in array:
         map[word]=len(word)
-    return map
+        l = map.values()
+    return list(l)
 
 
 #Write a function that takes a number and returns a list of its digits.
