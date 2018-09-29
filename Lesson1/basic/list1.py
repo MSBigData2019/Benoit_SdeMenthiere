@@ -20,6 +20,7 @@
 # strings where the string length is 2 or more and the first
 # and last chars of the string are the same.
 # Note: python does not have a ++ operator, but += works.
+# 
 def match_ends(words):
   # +++your code here+++
   c = 0
@@ -27,7 +28,7 @@ def match_ends(words):
       if len(word)>1:
         if word[0]==word[-1]:
               c += 1
-  return c 
+  return c
 
 
 # B. front_x
@@ -80,7 +81,7 @@ def main():
   test(match_ends(['', 'x', 'xy', 'xyx', 'xx']), 2)
   test(match_ends(['aaa', 'be', 'abc', 'hello']), 1)
 
-  
+
   print('front_x')
   test(front_x(['bbb', 'ccc', 'axx', 'xzz', 'xaa']),
        ['xaa', 'xzz', 'axx', 'bbb', 'ccc'])
@@ -89,7 +90,7 @@ def main():
   test(front_x(['mix', 'xyz', 'apple', 'xanadu', 'aardvark']),
        ['xanadu', 'xyz', 'aardvark', 'apple', 'mix'])
 
-       
+
 
   print('sort_last')
   test(sort_last([(1, 3), (3, 2), (2, 1)]),
