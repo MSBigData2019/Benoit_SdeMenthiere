@@ -25,16 +25,17 @@ public class DEPLOY {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String filename = "/home/benoit/eclipse-workspace/mapReduceFromScratch/adress_ip.txt";
+		String filename = "/home/b/msbgd/git/systeme_distribue/mapReduceFromScratch/adress_ip.txt";
 		ArrayList<String> text = readLines(filename);
 		ArrayList<Process> liste = new ArrayList<>();
-		System.out.println(text);
+		//System.out.println(text);
 		ArrayList<String> success_ip = new ArrayList<>();
 		for (String ip : text) {
-			ProcessBuilder pb = new ProcessBuilder("ssh", "bsarrauste@"+ip, "hostname");
+			ProcessBuilder pb = new ProcessBuilder("ssh", "-o StrictHostKeyChecking=no","bsarrauste@"+ip, "hostname");
 			//pb.inheritIO();
 			Process p = pb.start();
 			liste.add(p);
+			//System.out.println(ip);
 			}
 		for (Process p :liste) {
 			InputStream is = p.getInputStream();
@@ -42,7 +43,6 @@ public class DEPLOY {
 			BufferedReader br = new BufferedReader(isr);
 			String line = null;
 			while ((line = br.readLine()) != null) {
-	            System.out.println(line);
 	            success_ip.add(line);
 			}
 		
@@ -60,14 +60,10 @@ public class DEPLOY {
 			}
 			
 			ProcessBuilder spb = new ProcessBuilder("scp",
-					"/home/benoit/eclipse-workspace/mapReduceFromScratch/slave.jar",
+					"/home/b/msbgd/git/systeme_distribue/mapReduceFromScratch/slave.jar",
 					"bsarrauste@"+ip+":/tmp/bsarrauste/");
-			//pb.inheritIO();
-			
-			Process sp = spb.start();
-				
-			
-			//pb.inheritIO();
+			spb.inheritIO();
+			spb.start();			
 			}
 
 	}
