@@ -24,9 +24,9 @@ public class SLAVE {
 
 	public static void main(String[] args) throws InterruptedException {
 		String mode = args[0];
-		System.out.println(mode);
+//		System.out.println(mode);
 		if (mode.equals("0")) {
-			System.out.println("mode map");
+//			System.out.println("mode map");
 			String filename = "/tmp/bsarrauste/splits/"+args[1];
 			ArrayList<String> text = readLines(filename);
 			ProcessBuilder pb = new ProcessBuilder("mkdir","/tmp/bsarrauste/maps/");
@@ -40,15 +40,20 @@ public class SLAVE {
 				System.out.println("already exist");	
 			}
 			String output = "";
+			ArrayList<String> list = new ArrayList<>();
 			for (String line : text) {
 				for (String mot : line.split(" ")) {
 					output += mot+" 1\n";
+					if(!list.contains(mot)) {
+						list.add(mot);
+						System.out.println(mot);
+						}
 				}
 			}
 			
 		
 	        final String chemin = "/tmp/bsarrauste/maps/UM"+args[1].charAt(1)+".txt";
-	        System.out.println(chemin);
+//	        System.out.println(chemin);
 	        final File fichier =new File(chemin); 
 	        try {
 	            // Creation du fichier

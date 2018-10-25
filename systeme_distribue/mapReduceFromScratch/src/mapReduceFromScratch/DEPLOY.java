@@ -25,7 +25,7 @@ public class DEPLOY {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String filename = "/home/b/msbgd/git/systeme_distribue/mapReduceFromScratch/adress_ip.txt";
+		String filename = "/home/b/git/systeme_distribue/mapReduceFromScratch/adress_ip.txt";
 		ArrayList<String> text = readLines(filename);
 		ArrayList<Process> liste = new ArrayList<>();
 		//System.out.println(text);
@@ -60,7 +60,7 @@ public class DEPLOY {
 			}
 			
 			ProcessBuilder spb = new ProcessBuilder("scp",
-					"/home/b/msbgd/git/systeme_distribue/mapReduceFromScratch/slave.jar",
+					"/home/b/git/systeme_distribue/mapReduceFromScratch/slave.jar",
 					"bsarrauste@"+ip+":/tmp/bsarrauste/");
 			spb.inheritIO();
 			spb.start();			

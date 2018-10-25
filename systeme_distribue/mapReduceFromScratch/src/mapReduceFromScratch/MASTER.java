@@ -10,6 +10,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -27,10 +29,11 @@ public class MASTER {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String filename = "/home/b/msbgd/git/systeme_distribue/mapReduceFromScratch/adress_ip.txt";
+		String filename = "/home/b/git/systeme_distribue/mapReduceFromScratch/adress_ip.txt";
 		ArrayList<String> text = readLines(filename);
 		ArrayList<Process> liste = new ArrayList<>();
 		//System.out.println(text);
+		HashMap<String, ArrayList<String>> dic= new HashMap<>();
 		int i = 0;
 		for (String ip : text) {
 			ProcessBuilder pb = new ProcessBuilder("ssh", "-o StrictHostKeyChecking=no","bsarrauste@"+ip, "mkdir","/tmp/bsarrauste/splits/");
@@ -43,17 +46,46 @@ public class MASTER {
 				System.out.println("already exist");	
 			}
 			ProcessBuilder spb = new ProcessBuilder("scp",
-					"/home/b/msbgd/git/systeme_distribue/mapReduceFromScratch/s"+i+".txt",
+					"/home/b/git/systeme_distribue/mapReduceFromScratch/s"+i+".txt",
 					"bsarrauste@"+ip+":/tmp/bsarrauste/splits");
-			System.out.println("copy s"+i+" on "+ip);
-			i+=1;
+//			System.out.println("copy s"+i+" on "+ip);
 			spb.inheritIO();
 			spb.start();
 			//pb.inheritIO();
 			Process p = pb.start();
 			liste.add(p);
 			//System.out.println(ip);
+			ProcessBuilder pb_slave = new ProcessBuilder("ssh","-o StrictHostKeyChecking=no","bsarrauste@"+ip, "java", "-jar", "/tmp/bsarrauste/slave.jar","0","s"+i+".txt");
+//			pb.inheritIO();
+			Process p_slave = pb_slave.start();
+			p.waitFor(10, TimeUnit.SECONDS);
+			System.out.println("UM"+i+" - "+ip);
+			i+=1;
+			InputStream is = p_slave.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
+			InputStreamReader isr = new InputStreamReader(bis);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			boolean b = p.waitFor(10, TimeUnit.SECONDS);
+			//System.out.println(b);
+			if (b!=false) {
+			while ((line = br.readLine()) != null) {
+	            //System.out.println(line);
+	            ArrayList<String> value = dic.get(line);
+	            if (value != null) {
+	            	value.add("UM"+i);
+	            	dic.put(line, value);
+	            } else {
+	            	ArrayList<String> init = new ArrayList<>();
+	            	init.add("UM"+i);
+//	            	value = value.add(init);
+	            	dic.put(line, init);
+	            }
+	            
 			}
+			}
+		}
+		System.out.println(dic);
 		
 	}
 //	public static void main(String[] args) throws IOException, InterruptedException {
@@ -90,3 +122,4 @@ public class MASTER {
 	
 
 }
+	
