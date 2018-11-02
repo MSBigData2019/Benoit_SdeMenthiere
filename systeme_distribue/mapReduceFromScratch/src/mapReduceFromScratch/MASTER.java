@@ -5,14 +5,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class MASTER {
@@ -26,14 +29,33 @@ public class MASTER {
 		}
 		return (ArrayList<String>) lines;
 	}
-
+	public static void prepareShuffle(HashMap<String, String> dic_UM_mach, HashMap<String, ArrayList<String>> dic_key_UM) throws IOException {
+		for (Entry<String, ArrayList<String>> entry : dic_key_UM.entrySet()) {
+			ArrayList<String> UMs = entry.getValue();
+			boolean first = true;
+			String mach_destination = "";
+			for (String UM:UMs) {
+				String mach = dic_UM_mach.get(UM);
+				if (first) {
+					mach_destination = mach;
+					first = false;
+					continue;
+				}
+				ProcessBuilder pb = new ProcessBuilder("scp", "-3","bsarrauste@"+mach+
+						":/tmp/bsarrauste/maps/"+UM+".txt",
+						"bsarrauste@"+mach_destination+":/tmp/bsarrauste/maps/");
+				pb.inheritIO();
+				pb.start();			
+			}
+		}
+	}
 	public static void main(String[] args) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
 		String filename = "/home/b/git/systeme_distribue/mapReduceFromScratch/adress_ip.txt";
 		ArrayList<String> text = readLines(filename);
 		ArrayList<Process> liste = new ArrayList<>();
 		//System.out.println(text);
-		HashMap<String, ArrayList<String>> dic= new HashMap<>();
+		HashMap<String, ArrayList<String>> dic_key_UM= new HashMap<>();
+		HashMap<String, String> dic_UM_mach= new HashMap<>();
 		int i = 0;
 		for (String ip : text) {
 			ProcessBuilder pb = new ProcessBuilder("ssh", "-o StrictHostKeyChecking=no","bsarrauste@"+ip, "mkdir","/tmp/bsarrauste/splits/");
@@ -59,8 +81,8 @@ public class MASTER {
 //			pb.inheritIO();
 			Process p_slave = pb_slave.start();
 			p.waitFor(10, TimeUnit.SECONDS);
+			dic_UM_mach.put("UM"+i, ip);
 			System.out.println("UM"+i+" - "+ip);
-			i+=1;
 			InputStream is = p_slave.getInputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);
 			InputStreamReader isr = new InputStreamReader(bis);
@@ -71,22 +93,23 @@ public class MASTER {
 			if (b!=false) {
 			while ((line = br.readLine()) != null) {
 	            //System.out.println(line);
-	            ArrayList<String> value = dic.get(line);
+	            ArrayList<String> value = dic_key_UM.get(line);
 	            if (value != null) {
 	            	value.add("UM"+i);
-	            	dic.put(line, value);
+	            	dic_key_UM.put(line, value);
 	            } else {
 	            	ArrayList<String> init = new ArrayList<>();
 	            	init.add("UM"+i);
 //	            	value = value.add(init);
-	            	dic.put(line, init);
+	            	dic_key_UM.put(line, init);
 	            }
 	            
 			}
 			}
+			i+=1;
 		}
-		System.out.println(dic);
-		
+		System.out.println(dic_key_UM);
+		prepareShuffle(dic_UM_mach, dic_key_UM);
 	}
 //	public static void main(String[] args) throws IOException, InterruptedException {
 //		// TODO Auto-generated method stub
