@@ -69,8 +69,9 @@ object Trainer {
     //val cv = cvModel.fit(rm).transform(rm).select("count_vectorized")
     //idf.fit(cv).transform(cv).select("tfidf").show()
 //
-    val indexer1 = new StringIndexer().setInputCol("country2").setOutputCol("country_indexed")
-    val indexer2 = new StringIndexer().setInputCol("currency2").setOutputCol("currency_indexed")
+// on skip les labels invalides pour eviter l'erreur unseen label
+    val indexer1 = new StringIndexer().setInputCol("country2").setOutputCol("country_indexed").setHandleInvalid("skip")
+    val indexer2 = new StringIndexer().setInputCol("currency2").setOutputCol("currency_indexed").setHandleInvalid("skip")
 
     val encoder1 = new OneHotEncoder().setInputCol("country_indexed").setOutputCol("country_encoded")
     val encoder2 = new OneHotEncoder().setInputCol("currency_indexed").setOutputCol("currency_encoded")
@@ -127,5 +128,6 @@ object Trainer {
   println("f1-score on test set: " + f1_score)
 
   df_WithPredictions.groupBy("final_status", "predictions").count.show()
-  }
+  model.write.overwrite().save("model") }
 }
+

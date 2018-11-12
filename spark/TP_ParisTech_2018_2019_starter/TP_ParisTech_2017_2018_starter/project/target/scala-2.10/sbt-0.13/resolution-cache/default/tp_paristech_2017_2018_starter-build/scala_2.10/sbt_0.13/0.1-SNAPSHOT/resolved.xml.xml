@@ -4,7 +4,7 @@
 		module="tp_paristech_2017_2018_starter-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20181103143629"
+		publication="20181112221748"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>
