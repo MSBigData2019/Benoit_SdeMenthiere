@@ -122,7 +122,7 @@ def plot_2d(data, y=None, w=None, alpha_choice=1):
 
     for i in range(len(labs)):
         plt.scatter(data[idxbyclass[i], 0], data[idxbyclass[i], 1],
-                    c=color_blind_list[i], s=80, marker=symlist[i])
+                    c=[color_blind_list[i]], s=80, marker=symlist[i])
     plt.ylim([np.min(data[:, 1]), np.max(data[:, 1])])
     plt.xlim([np.min(data[:, 0]), np.max(data[:, 0])])
     mx = np.min(data[:, 0])
@@ -189,7 +189,7 @@ def frontiere_new(f, X, y, w=None, step=50, alpha_choice=1, colorbar=True,
     if samples is True:
         for i, label in enumerate(y):
             label_num = np.where(labels == label)[0][0]
-            plt.scatter(X[i, 0], X[i, 1], c=color_blind_list[label_num],
+            plt.scatter(X[i, 0], X[i, 1], c=[color_blind_list[label_num]],
                         s=80, marker=symlist[label_num])
     plt.xlim([min_tot0, max_tot0])
     plt.ylim([min_tot1, max_tot1])
