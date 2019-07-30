@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<style>
+
+h1{
+   color: red;
+}
+body {
+    background-color: blue
+
+}
+html {
+    min-height: 100%;
+}
+</style>
+
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <title>Tous les chemins mènent à la philosophie</title>
+    <p style="font-size:300%;">Bienvenu dans ce jeu <i>Tous les chemins mènent à la philosophie</i>. <br>Le but du jeu est d'arriver sur la page philosophie le plus vite possible</p>
+
+  </head>
+  <body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages[0]== 'You win' %}
+    <p style="color:green;">{{ get_flashed_messages()[0] }} in {{session['score']}}</p>
+    {% else %}
+    <p style="color:red;">{{ get_flashed_messages()[0] }}</p>
+    {% endif %}
+    {% endwith %}
+    {% block body %}
+      <form action="/new-game" method="post">
+        <label for="name">premier mot :</label>
+        <input type="text" id="url" name="start">
+        <input type="submit" value="submit">
+
+
+      </form>
+
+
+      {# Fin du bloc "body" #}
+    {% endblock %}
+  </body>
+</html>

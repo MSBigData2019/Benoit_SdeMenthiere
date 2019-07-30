@@ -1,0 +1,49 @@
+{% extends "index.html" %}
+
+{% block body %}
+<style>
+
+  form {
+    /* Uniquement centrer le formulaire sur la page */
+    margin: 0 auto;
+    width: 400px;
+    /* Encadré pour voir les limites du formulaire */
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+  }
+
+  h1{
+     color: red;
+ }
+ body {
+  background-color: blue;
+  min-height: 100%;
+}
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+</style>
+
+<a href='/'> <h1 style="text-align:center;">{{title}}</h1></a>
+
+
+  <form action="/move" method="post">
+    <input type='hidden'>
+    <label for="name">score {{session['score']}} :</label>
+    <div>
+    <input type="radio" name="destination" value={{links[0]}} checked="checked">{{links[0]}}
+  </div>
+    {%for link in links[1:]%}
+    <br>
+    <div>
+    <input type="radio" name="destination" value={{link}}>{{link}}
+  </div>
+    {%endfor%}
+    <div align="right">
+<input type="submit" value="submit" />
+</div>
+  </input>
+  </form>
+
+{% endblock %}
